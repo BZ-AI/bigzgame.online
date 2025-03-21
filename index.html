@@ -6,8 +6,13 @@
     <meta name="description" content="Play Plants vs Zombies online for free! Defend your garden from zombies in this classic tower defense game. No download required.">
     <meta name="keywords" content="Plants vs Zombies, PVZ, online game, tower defense, free game, zombie game">
     <meta name="author" content="Big Z Games">
-    <title>Plants vs Zombies Online - Free Tower Defense Game | BigZGame</title>
+    <title>在线玩植物大战僵尸 - 免费塔防游戏 | BigZGame</title>
     <link rel="canonical" href="https://bigzgame.online">
+    
+    <!-- Cloudflare 优化 -->
+    <meta http-equiv="Cache-Control" content="public, max-age=3600">
+    <link rel="dns-prefetch" href="https://html-classic.itch.zone">
+    <link rel="preconnect" href="https://html-classic.itch.zone" crossorigin>
     
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -15,223 +20,264 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bigzgame.online">
-    <meta property="og:title" content="Plants vs Zombies Online - Free Tower Defense Game">
-    <meta property="og:description" content="Play Plants vs Zombies online for free! Defend your garden from zombies in this classic tower defense game.">
+    <meta property="og:title" content="在线玩植物大战僵尸 - 免费塔防游戏">
+    <meta property="og:description" content="在线玩植物大战僵尸！使用各种植物策略性地防御僵尸入侵，免费无需下载！">
     <meta property="og:image" content="https://bigzgame.online/pvz-banner.jpg">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://bigzgame.online">
-    <meta property="twitter:title" content="Plants vs Zombies Online - Free Tower Defense Game">
-    <meta property="twitter:description" content="Play Plants vs Zombies online for free! Defend your garden from zombies in this classic tower defense game.">
+    <meta property="twitter:title" content="在线玩植物大战僵尸 - 免费塔防游戏">
+    <meta property="twitter:description" content="在线玩植物大战僵尸！使用各种植物策略性地防御僵尸入侵，免费无需下载！">
     <meta property="twitter:image" content="https://bigzgame.online/pvz-banner.jpg">
     
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        apple: {
-                            blue: '#007AFF',
-                            gray: '#8E8E93',
-                            green: '#34C759',
-                            indigo: '#5856D6',
-                            orange: '#FF9500',
-                            pink: '#FF2D55',
-                            purple: '#AF52DE',
-                            red: '#FF3B30',
-                            teal: '#5AC8FA',
-                            yellow: '#FFCC00',
-                            darkbg: '#1C1C1E',
-                            lightbg: '#F2F2F7'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- Custom CSS -->
+    <!-- 关键CSS内联 -->
     <style type="text/css">
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: #F2F2F7;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            color: #007AFF;
+            margin: 15px 0;
+        }
+        
+        .instruction {
+            text-align: center;
+            margin: 15px auto;
+            max-width: 90%;
+            color: #333;
+            font-size: 1rem;
         }
         
         .game-container {
             width: 100%;
-            max-width: 800px;
-            aspect-ratio: 4/3;
+            height: calc(100vh - 130px); /* 保留一些空间给标题和说明 */
             margin: 0 auto;
-            border-radius: 12px;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            background-color: #F2F2F7;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .game-frame {
             width: 100%;
             height: 100%;
             border: none;
+            display: block;
         }
         
-        @media (max-width: 768px) {
-            .game-container {
-                aspect-ratio: 3/4;
-                max-width: 100%;
+        .loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #F2F2F7;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #007AFF;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
         
-        .feature-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* 控制按钮容器 */
+        .control-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            z-index: 5;
+            display: flex;
+            gap: 5px;
         }
         
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        /* 控制按钮 */
+        .control-btn {
+            background: rgba(0, 122, 255, 0.8);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: rgba(0, 122, 255, 1);
+        }
+        
+        /* 媒体查询：手机竖屏 */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .game-container {
+                height: calc(100vh - 100px);
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin: 10px 0;
+            }
+            
+            .instruction {
+                font-size: 0.9rem;
+                margin: 10px auto;
+            }
+        }
+        
+        /* 媒体查询：手机横屏 */
+        @media (max-width: 896px) and (orientation: landscape) {
+            h1 {
+                font-size: 1.3rem;
+                margin: 5px 0;
+            }
+            
+            .instruction {
+                font-size: 0.8rem;
+                margin: 5px auto;
+            }
+            
+            .game-container {
+                height: calc(100vh - 70px);
+            }
         }
     </style>
 </head>
 
-<body class="bg-apple-lightbg text-gray-800">
-    <!-- Header -->
-    <header class="bg-apple-blue text-white py-4 shadow-md">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <h1 class="text-3xl md:text-4xl font-bold">Plants vs Zombies Online</h1>
-                <p class="text-xl opacity-90">Defend your garden from the zombie invasion!</p>
-            </div>
-            <div>
-                <a href="#play" class="bg-white text-apple-blue font-bold py-2 px-6 rounded-full hover:bg-opacity-90 transition">Play Now</a>
-            </div>
-        </div>
-    </header>
+<body>
+    <h1>在线玩植物与僵尸</h1>
+    <p class="instruction">使用鼠标或触控来放置植物，策略性地阻挡僵尸！可以点击右下角按钮全屏游戏。</p>
     
-    <!-- Game Section -->
-    <section id="play" class="py-10 container mx-auto px-4">
-        <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-apple-purple">Play Plants vs Zombies Online</h2>
-        <div class="game-container">
-            <iframe class="game-frame" src="https://html-classic.itch.zone/html/5049297/index.html" allowfullscreen></iframe>
+    <div class="game-container" id="game-container">
+        <div class="loader" id="game-loader">
+            <div class="spinner"></div>
         </div>
-        <div class="mt-6 text-center">
-            <p class="text-lg text-gray-700">Use mouse or touch controls to place plants strategically and stop the zombies!</p>
+        <iframe id="game-frame" class="game-frame" src="https://html-classic.itch.zone/html/5049297/index.html" allowfullscreen allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
+        
+        <div class="control-container">
+            <button class="control-btn" id="fullscreen-btn">全屏</button>
         </div>
-    </section>
+    </div>
     
-    <!-- Game Info Section -->
-    <section class="py-10 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-apple-green">About Plants vs Zombies</h2>
-            <div class="max-w-4xl mx-auto">
-                <p class="text-lg leading-relaxed mb-6">
-                    Plants vs Zombies is a popular tower defense game where players defend their homes from zombies by strategically placing various plants with unique abilities. Each plant serves a different purpose in your defense strategy, from shooting peas to producing sun energy.
-                </p>
-                <p class="text-lg leading-relaxed mb-6">
-                    Originally developed by PopCap Games, Plants vs Zombies has become a beloved franchise known for its charming graphics, humorous characters, and addictive gameplay. The game balances strategy with accessibility, making it enjoyable for players of all ages.
-                </p>
-                <p class="text-lg leading-relaxed">
-                    Play Plants vs Zombies online directly in your browser with no downloads required. Enjoy the classic tower defense gameplay that has captivated millions of players worldwide!
-                </p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Features Section -->
-    <section class="py-10 bg-apple-lightbg">
-        <div class="container mx-auto px-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-apple-orange">Game Features</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="feature-card bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-bold text-apple-blue mb-3">Strategic Gameplay</h3>
-                    <p>Place different plants strategically to defend against various types of zombies, each with unique abilities and weaknesses.</p>
-                </div>
-                <div class="feature-card bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-bold text-apple-green mb-3">Diverse Plants</h3>
-                    <p>Collect sun energy to deploy a wide variety of plants, from offensive Peashooters to defensive Wall-nuts.</p>
-                </div>
-                <div class="feature-card bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-bold text-apple-purple mb-3">Challenging Zombies</h3>
-                    <p>Face increasingly difficult zombies including pole vaulters, bucket heads, and the dreaded Gargantuar!</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- How to Play Section -->
-    <section class="py-10 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-apple-teal">How to Play</h2>
-            <div class="max-w-4xl mx-auto">
-                <div class="flex flex-col md:flex-row items-start mb-8">
-                    <div class="w-full md:w-1/4 font-bold text-apple-blue text-xl mb-2 md:mb-0">1. Collect Sun</div>
-                    <div class="w-full md:w-3/4">Click on falling suns to collect solar energy, which is used as currency to deploy plants.</div>
-                </div>
-                <div class="flex flex-col md:flex-row items-start mb-8">
-                    <div class="w-full md:w-1/4 font-bold text-apple-blue text-xl mb-2 md:mb-0">2. Place Plants</div>
-                    <div class="w-full md:w-3/4">Select a plant from your inventory, then click on a lawn tile to place it. Different plants have different costs and abilities.</div>
-                </div>
-                <div class="flex flex-col md:flex-row items-start mb-8">
-                    <div class="w-full md:w-1/4 font-bold text-apple-blue text-xl mb-2 md:mb-0">3. Defend Your Lawn</div>
-                    <div class="w-full md:w-3/4">Stop zombies from reaching your house by creating an effective defense with your plants.</div>
-                </div>
-                <div class="flex flex-col md:flex-row items-start">
-                    <div class="w-full md:w-1/4 font-bold text-apple-blue text-xl mb-2 md:mb-0">4. Win Levels</div>
-                    <div class="w-full md:w-3/4">Defeat all zombie waves to complete a level and progress through the game, unlocking new plants and facing tougher zombies.</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- FAQ Section -->
-    <section class="py-10 bg-apple-lightbg">
-        <div class="container mx-auto px-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-apple-red">Frequently Asked Questions</h2>
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-6">
-                    <h3 class="text-xl font-bold text-apple-blue mb-2">Is this game free to play?</h3>
-                    <p>Yes, you can play Plants vs Zombies online completely free on our website with no registration required.</p>
-                </div>
-                <div class="mb-6">
-                    <h3 class="text-xl font-bold text-apple-blue mb-2">Can I play on mobile devices?</h3>
-                    <p>Absolutely! Our version of Plants vs Zombies is optimized for both desktop and mobile devices, allowing you to play on the go.</p>
-                </div>
-                <div class="mb-6">
-                    <h3 class="text-xl font-bold text-apple-blue mb-2">Does the game save my progress?</h3>
-                    <p>The online version may not save your long-term progress if you clear browser data. For a complete experience with saved progress, consider the official game versions.</p>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-apple-blue mb-2">Why is my game laggy?</h3>
-                    <p>Game performance depends on your device capabilities and internet connection. Close unnecessary browser tabs and applications for improved performance.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer class="bg-apple-darkbg text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <p class="text-xl font-bold">BigZGame Online</p>
-                    <p>Your home for free online games</p>
-                </div>
-                <div>
-                    <p>&copy; 2023 BigZGame.online. All rights reserved.</p>
-                    <p class="text-sm text-gray-400">Plants vs Zombies is a trademark of PopCap Games/EA. This is a fan-made website.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取元素
+            const gameFrame = document.getElementById('game-frame');
+            const gameLoader = document.getElementById('game-loader');
+            const gameContainer = document.getElementById('game-container');
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            
+            // 监听 iframe 加载完成事件
+            gameFrame.onload = function() {
+                // 隐藏加载动画
+                setTimeout(function() {
+                    gameLoader.classList.add('hidden');
+                }, 500);
+            };
+            
+            // 全屏功能
+            fullscreenBtn.addEventListener('click', function() {
+                toggleFullscreen(gameContainer);
+            });
+            
+            // 封装全屏切换功能
+            function toggleFullscreen(element) {
+                if (!document.fullscreenElement &&
+                    !document.mozFullScreenElement &&
+                    !document.webkitFullscreenElement &&
+                    !document.msFullscreenElement) {
+                    // 进入全屏
+                    if (element.requestFullscreen) {
+                        element.requestFullscreen();
+                    } else if (element.msRequestFullscreen) {
+                        element.msRequestFullscreen();
+                    } else if (element.mozRequestFullScreen) {
+                        element.mozRequestFullScreen();
+                    } else if (element.webkitRequestFullscreen) {
+                        element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                    }
+                } else {
+                    // 退出全屏
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    }
+                }
+            }
+            
+            // 修复iOS上iframe可能被视口限制的问题
+            function fixIOSIframe() {
+                if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+                    gameContainer.style.height = `${window.innerHeight - 100}px`;
+                }
+            }
+            
+            // 初始调用
+            fixIOSIframe();
+            
+            // 监听窗口大小变化
+            window.addEventListener('resize', fixIOSIframe);
+            
+            // 修复屏幕旋转问题
+            window.addEventListener('orientationchange', function() {
+                setTimeout(fixIOSIframe, 100);
+            });
+            
+            // 处理iOS上的滑动问题
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.target !== gameFrame) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // 防止双击缩放（移动端）
+            document.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+        });
+    </script>
     
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "VideoGame",
-        "name": "Plants vs Zombies Online",
-        "description": "Play Plants vs Zombies online for free! Defend your garden from zombies in this classic tower defense game. No download required.",
-        "genre": "Tower Defense",
+        "name": "植物大战僵尸 在线版",
+        "description": "在线玩植物大战僵尸！使用各种植物策略性地防御僵尸入侵，免费无需下载！",
+        "genre": "塔防游戏",
         "playMode": "SinglePlayer",
         "applicationCategory": "BrowserGame",
         "operatingSystem": "Windows, macOS, Android, iOS",
